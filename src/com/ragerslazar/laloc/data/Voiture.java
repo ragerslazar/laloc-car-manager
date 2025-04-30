@@ -1,4 +1,4 @@
-package data;
+package com.ragerslazar.laloc.data;
 
 public class Voiture {
     private JDatabase db;

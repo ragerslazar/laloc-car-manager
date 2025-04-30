@@ -1,4 +1,4 @@
-package data;
+package com.ragerslazar.laloc.data;
 
 import java.util.ArrayList;
 

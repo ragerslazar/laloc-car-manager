@@ -1,6 +1,7 @@
-package data;
+package com.ragerslazar.laloc.data;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,38 +35,43 @@ public class JDatabase {
     public String loginDB(String email, String password) {
         String authentication = "not_authenticated";
 
-        String mdp = md5Hash(password);
-        String req = "SELECT * FROM utilisateur WHERE email = ? AND password = ?";
+        String hashedPwd = getHashedPwd(email);
 
-        try {
-            PreparedStatement pstmt = this.cx.prepareStatement(req);
-            pstmt.setString(1, email);
-            pstmt.setString(2, mdp);
-            ResultSet rs = pstmt.executeQuery();
+        if (hashedPwd != null) {
+            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedPwd);
 
-            if (rs.next()) {
-                String type = rs.getString("type");
-                if (type.equals("admin")) {
-                    authentication = "approved";
-                    System.out.println("Connexion réussie !");
-                } else {
-                    authentication = "admin_perm_missing";
-                    System.out.println("Compte admin nécessaire.");
+            if (result.verified) {
+                String req = "SELECT * FROM utilisateur WHERE email = ?";
+
+                try {
+                    PreparedStatement pstmt = this.cx.prepareStatement(req);
+                    pstmt.setString(1, email);
+                    ResultSet rs = pstmt.executeQuery();
+
+                    if (rs.next()) {
+                        String type = rs.getString("type");
+                        if (type.equals("admin")) {
+                            authentication = "approved";
+                            System.out.println("Connexion réussie !");
+                        } else {
+                            authentication = "admin_perm_missing";
+                            System.out.println("Compte admin nécessaire.");
+                        }
+                    }
+                } catch (SQLException e) {
+                    System.out.println("SQLException");
+                    throw new RuntimeException(e);
+                } catch (NullPointerException e) {
+                    System.out.println("Serveur off");
                 }
             } else {
-                System.out.println("Nom d'utilisateur ou mot de passe incorrect.");
+                System.out.println("Mot de passe incorrect.");
             }
-        } catch (SQLSyntaxErrorException e) {
-            System.out.println("Erreur de syntaxe SQL");
-        } catch (SQLException e) {
-            System.out.println("SQLException");
-            throw new RuntimeException(e);
-        } catch (NullPointerException e) {
-            System.out.println("Serveur off");
         }
-
         return authentication;
     }
+
+
 
 
     public Object[][] queryVoitures() {
@@ -177,5 +183,24 @@ public class JDatabase {
             throw new RuntimeException(e);
         }
     }
+
+    public String getHashedPwd(String email) {
+        String hashedPwd = null;
+
+        String req = "SELECT password FROM utilisateur WHERE email = ?";
+        try {
+            PreparedStatement pstmt = this.cx.prepareStatement(req);
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                hashedPwd = rs.getString("password");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return hashedPwd;
+    }
+
 }
 
