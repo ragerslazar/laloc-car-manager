@@ -9,7 +9,7 @@ public class Garage {
         this.db = db;
     }
 
-    public ArrayList<Object[]> getGarage() {
+    public Object[][] getGarage() {
         return this.db.queryGarage();
     }
 }

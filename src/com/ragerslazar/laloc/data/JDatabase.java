@@ -3,10 +3,12 @@ package com.ragerslazar.laloc.data;
 import io.github.cdimascio.dotenv.Dotenv;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import javax.swing.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JDatabase {
     private Connection cx;
@@ -72,8 +74,6 @@ public class JDatabase {
     }
 
 
-
-
     public Object[][] queryVoitures() {
         ArrayList<Object[]> voituresList = new ArrayList<>();
 
@@ -89,17 +89,15 @@ public class JDatabase {
                 String marque = rs.getString("marque");
                 String modele = rs.getString("modele");
                 String immatriculation = rs.getString("immatriculation");
-                Object[] voiture = {id, marque, modele, immatriculation, "Action"};
+                Object[] voiture = {id, marque, modele, immatriculation, "❌", "✏️"};
                 voituresList.add(voiture);
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération des véhicules: " + e.getMessage());
         }
 
-        Object[][] data = new Object[voituresList.size()][5];
-        for (int i = 0; i < voituresList.size(); i++) {
-            data[i] = voituresList.get(i);
-        }
+        Object[][] data = new Object[voituresList.size()][6];
+        voituresList.toArray(data);
 
         return data;
     }
@@ -140,7 +138,25 @@ public class JDatabase {
         return insertSuccess;
     }
 
-    public ArrayList<Object[]> queryGarage() {
+    public boolean queryDelete(int id) {
+        boolean deleted = false;
+        String req = "DELETE FROM `vehicule` WHERE id_vehicule = ?";
+        try {
+            PreparedStatement pstmt = this.cx.prepareStatement(req);
+            pstmt.setInt(1, id);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                deleted = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return deleted;
+    }
+
+    public Object[][] queryGarage() {
         ArrayList<Object[]> result = new ArrayList<>();
 
         String req = "SELECT * FROM garage";
@@ -162,29 +178,13 @@ public class JDatabase {
             e.printStackTrace();
             System.out.println("Erreur de connexion ou d'exécution de la requête.");
         }
+        Object[][] data = new Object[result.size()][3];
+        result.toArray(data);
 
-        return result;
+        return data;
     }
 
-
-    private String md5Hash(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(input.getBytes());
-
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : messageDigest) {
-                String hex = Integer.toHexString(0xff & b);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public String getHashedPwd(String email) {
+    private String getHashedPwd(String email) {
         String hashedPwd = null;
 
         String req = "SELECT password FROM utilisateur WHERE email = ?";

@@ -7,6 +7,9 @@ import com.ragerslazar.laloc.data.Voiture;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -82,11 +85,38 @@ public class IHM {
 
         newFrame.add(topPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"ID", "Marque", "Modèle", "Immatriculation", "Action"};
+        String[] columnNames = {"ID", "Marque", "Modèle", "Immatriculation", "Supprimer", "Modifier"};
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         JTable table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.rowAtPoint(e.getPoint());
+                int col = table.columnAtPoint(e.getPoint());
+
+                // Si clic sur la 5ème colonne (index 4)
+                if (row >= 0 && col == 4) {
+                    int confirm = JOptionPane.showConfirmDialog(scrollPane,
+                            "Voulez-vous vraiment supprimer ce véhicule ?",
+                            "Confirmation",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        int idVehicule = (int) table.getValueAt(row, 0); // Récupérer l'ID du véhicule
+                        boolean deleteCar = voiture.deleteDB(idVehicule);
+                        if (deleteCar) {
+                            ((DefaultTableModel) table.getModel()).removeRow(row);
+                            JOptionPane.showMessageDialog(table, "Véhicule supprimé avec succès !");
+                        } else {
+                            JOptionPane.showMessageDialog(table, "La voiture n'a pas pu être supprimée de la base.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            }
+        });
 
         newFrame.add(scrollPane, BorderLayout.CENTER);
 
@@ -147,19 +177,17 @@ public class IHM {
             } else {
                 boolean insertDB = this.voiture.insertDB(marque, img, modele, immatriculation, chevaux, km, dispo, prix, idGarage);
                 if (insertDB) {
-                    frame.dispose(); //Ferme la frame
+                    frame.dispose();
                     panel();
                 } else {
                     JOptionPane.showMessageDialog(frame, "Erreur lors de l'insertion.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        List<Object[]> mGarage = this.garage.getGarage();
 
         String[] columnNames = {"ID", "Nom", "Adresse"};
 
-        Object[][] data = new Object[mGarage.size()][3];
-        mGarage.toArray(data);
+        Object[][] data = this.garage.getGarage();
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         JTable table = new JTable(model);

@@ -14,4 +14,9 @@ public class Voiture {
     public boolean insertDB(String marque, String img, String modele, String immatriculation, String chevaux, String km, String dispo, String prix, String idGarage) {
         return this.db.queryInsert(marque, img, modele, immatriculation, chevaux, km, dispo, prix, idGarage);
     }
+
+    public boolean deleteDB(int id) {
+        return this.db.queryDelete(id);
+    }
+
 }
