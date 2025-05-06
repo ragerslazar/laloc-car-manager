@@ -20,15 +20,11 @@ public class JDatabase {
             String dbPassword = dotenv.get("DB_PASSWORD");
             Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
             this.cx = DriverManager.getConnection(dbHost, dbUsername, dbPassword);
-            if (cx != null) {
-                System.out.println("Connexion réussie !");
-            } else {
-                System.out.println("Connexion Fail !");
-            }
+            System.out.println("Connexion réussie !");
         } catch (ClassNotFoundException ex) {
             System.out.println("Driver non trouvé");
         } catch (InstantiationException | SQLException e) {
-            System.out.println("URL ou utilisateur/mot de passe incorrect");
+            System.out.println("E-mail ou mot de passe incorrect");
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -77,7 +73,7 @@ public class JDatabase {
     public Object[][] queryVoitures() {
         ArrayList<Object[]> voituresList = new ArrayList<>();
 
-        String req = "SELECT id_vehicule, marque, modele, immatriculation FROM vehicule WHERE dispo = ?";
+        String req = "SELECT * FROM vehicule WHERE dispo = ?";
 
         try {
             PreparedStatement pstmt = this.cx.prepareStatement(req);
@@ -87,16 +83,22 @@ public class JDatabase {
             while (rs.next()) {
                 int id = rs.getInt("id_vehicule");
                 String marque = rs.getString("marque");
+                String img = rs.getString("img");
                 String modele = rs.getString("modele");
                 String immatriculation = rs.getString("immatriculation");
-                Object[] voiture = {id, marque, modele, immatriculation, "❌", "✏️"};
+                byte cf = rs.getByte("chevaux_fiscaux");
+                int km = rs.getInt("km");
+                byte dispo = rs.getByte("dispo");
+                int prix = rs.getInt("prix");
+                int id_garage = rs.getInt("id_garage");
+                Object[] voiture = {id, marque, img, modele, immatriculation, cf, km, dispo, prix, id_garage, "❌", "✏️"};
                 voituresList.add(voiture);
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération des véhicules: " + e.getMessage());
         }
 
-        Object[][] data = new Object[voituresList.size()][6];
+        Object[][] data = new Object[voituresList.size()][11];
         voituresList.toArray(data);
 
         return data;
@@ -156,6 +158,42 @@ public class JDatabase {
         return deleted;
     }
 
+    public boolean queryUpdate(String idVehicule, String marque, String img, String modele, String immatriculation, String chevaux, String km, String dispo, String prix, String idGarage) {
+        boolean updateSuccess = false;
+        String req = "UPDATE vehicule SET marque = ?, img = ?, modele = ?, immatriculation = ?, chevaux_fiscaux = ?, km = ?, dispo = ?, prix = ?, id_garage = ? WHERE id_vehicule = ?;";
+
+        try {
+            PreparedStatement stmt = this.cx.prepareStatement(req);
+
+            stmt.setString(1, marque);
+            stmt.setString(2, img);
+            stmt.setString(3, modele);
+            stmt.setString(4, immatriculation);
+            stmt.setString(5, chevaux);
+            stmt.setString(6, km);
+            stmt.setString(7, dispo);
+            stmt.setString(8, prix);
+            stmt.setString(9, idGarage);
+            stmt.setString(10, idVehicule);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                updateSuccess = true;
+                System.out.println("Véhicule modifié avec succès.");
+            } else {
+                System.out.println("Échec de la modification.");
+            }
+        } catch (SQLSyntaxErrorException e) {
+            System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur de connexion ou d'exécution de la requête.");
+        }
+
+        return updateSuccess;
+    }
+
     public Object[][] queryGarage() {
         ArrayList<Object[]> result = new ArrayList<>();
 
@@ -183,6 +221,10 @@ public class JDatabase {
 
         return data;
     }
+
+//    public boolean queryUpdate() {
+//
+//    }
 
     private String getHashedPwd(String email) {
         String hashedPwd = null;

@@ -19,4 +19,7 @@ public class Voiture {
         return this.db.queryDelete(id);
     }
 
+    public boolean updateDB(String idVehicule, String marque, String img, String modele, String immatriculation, String chevaux, String km, String dispo, String prix, String idGarage) {
+        return this.db.queryUpdate(idVehicule, marque, img, modele, immatriculation, chevaux, km, dispo, prix, idGarage);
+    }
 }
