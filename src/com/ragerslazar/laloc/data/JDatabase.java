@@ -3,12 +3,8 @@ package com.ragerslazar.laloc.data;
 import io.github.cdimascio.dotenv.Dotenv;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-import javax.swing.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class JDatabase {
     private Connection cx;
@@ -221,10 +217,6 @@ public class JDatabase {
 
         return data;
     }
-
-//    public boolean queryUpdate() {
-//
-//    }
 
     private String getHashedPwd(String email) {
         String hashedPwd = null;
