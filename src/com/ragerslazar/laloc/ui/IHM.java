@@ -239,7 +239,7 @@ public class IHM {
         modifFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Utilise un layout en 18 lignes, 1 colonne : 9 labels + 9 champs
-        modifFrame.setLayout(new GridLayout(19, 1, 5, 5));
+        modifFrame.setLayout(new GridLayout(20, 1, 5, 5));
 
         JLabel marqueLabel = new JLabel("Marque :");
         JLabel imageLabel = new JLabel("Image :");
@@ -281,6 +281,7 @@ public class IHM {
         modifFrame.add(idGarageField);
 
         JButton saveButton = new JButton("Enregistrer");
+        JButton closeButton = new JButton("Fermer");
         saveButton.addActionListener(_ -> {
             String marque = marqueField.getText();
             String image = imageField.getText();
@@ -297,7 +298,13 @@ public class IHM {
             panel();
         });
 
+        closeButton.addActionListener(_ -> {
+            modifFrame.dispose();
+            panel();
+        });
+
         modifFrame.add(saveButton);
+        modifFrame.add(closeButton);
         modifFrame.setVisible(true);
     }
 }
