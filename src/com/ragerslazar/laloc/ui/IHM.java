@@ -92,12 +92,11 @@ public class IHM {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                newFrame.dispose();
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
 
-                // Si clic sur la 5ème colonne (index 4)
                 if (row >= 0 && col == 10) {
+                    newFrame.dispose();
                     int confirm = JOptionPane.showConfirmDialog(scrollPane,
                             "Voulez-vous vraiment supprimer ce véhicule ?",
                             "Confirmation",
@@ -115,6 +114,7 @@ public class IHM {
                     }
                     panel();
                 } else if (row >= 0 && col == 11) {
+                    newFrame.dispose();
                     updatePanel(table, row);
                 }
             }
@@ -236,7 +236,6 @@ public class IHM {
         modifFrame.setLocationRelativeTo(null);
         modifFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Utilise un layout en 18 lignes, 1 colonne : 9 labels + 9 champs
         modifFrame.setLayout(new GridLayout(20, 1, 5, 5));
 
         JLabel marqueLabel = new JLabel("Marque :");
