@@ -1,7 +1,5 @@
 package com.ragerslazar.laloc.data;
 
-import java.util.ArrayList;
-
 public class Garage {
     private JDatabase db;
 
