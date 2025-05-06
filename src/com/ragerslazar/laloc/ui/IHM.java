@@ -107,7 +107,7 @@ public class IHM {
                         boolean deleteCar = voiture.deleteDB(idVehicule);
                         if (deleteCar) {
                             ((DefaultTableModel) table.getModel()).removeRow(row);
-                            JOptionPane.showMessageDialog(table, "Véhicule supprimé avec succès !");
+                            JOptionPane.showMessageDialog(table,"Véhicule supprimé avec succès !", "Info", JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             JOptionPane.showMessageDialog(table, "La voiture n'a pas pu être supprimée de la base.", "Erreur", JOptionPane.ERROR_MESSAGE);
                         }
@@ -290,7 +290,12 @@ public class IHM {
             String prix = prixField.getText();
             String idGarage = idGarageField.getText();
 
-            this.voiture.updateDB(idVehicule, marque, image, modele, immatriculation, chevaux, kilometrage, disponibilite, prix, idGarage);
+            boolean update = this.voiture.updateDB(idVehicule, marque, image, modele, immatriculation, chevaux, kilometrage, disponibilite, prix, idGarage);
+            if (update) {
+                JOptionPane.showMessageDialog(modifFrame, "Véhicule modifié avec succès !", "Info", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(modifFrame, "Erreur lors de la modification.", "Info", JOptionPane.ERROR_MESSAGE);
+            }
             modifFrame.dispose();
             panel();
         });
