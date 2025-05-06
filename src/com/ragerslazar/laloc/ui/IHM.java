@@ -114,8 +114,8 @@ public class IHM {
                         } else {
                             JOptionPane.showMessageDialog(table, "La voiture n'a pas pu être supprimée de la base.", "Erreur", JOptionPane.ERROR_MESSAGE);
                         }
-                        panel();
                     }
+                    panel();
                 } else if (row >= 0 && col == 11) {
                     updatePanel(table, row);
                 }
