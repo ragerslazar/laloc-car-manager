@@ -1,4 +1,4 @@
-package com.ragerslazar.laloc.data;
+package com.ragerslazar.laloc.model;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import at.favre.lib.crypto.bcrypt.BCrypt;

@@ -1,4 +1,4 @@
-import com.ragerslazar.laloc.ui.IHM;
+import com.ragerslazar.laloc.view.IHM;
 
 import javax.swing.*;
 

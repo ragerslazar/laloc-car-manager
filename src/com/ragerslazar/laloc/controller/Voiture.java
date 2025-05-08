@@ -1,4 +1,6 @@
-package com.ragerslazar.laloc.data;
+package com.ragerslazar.laloc.controller;
+
+import com.ragerslazar.laloc.model.JDatabase;
 
 public class Voiture {
     private JDatabase db;
