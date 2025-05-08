@@ -1,8 +1,8 @@
-package com.ragerslazar.laloc.ui;
+package com.ragerslazar.laloc.view;
 
-import com.ragerslazar.laloc.data.Garage;
-import com.ragerslazar.laloc.data.JDatabase;
-import com.ragerslazar.laloc.data.Voiture;
+import com.ragerslazar.laloc.controller.Garage;
+import com.ragerslazar.laloc.model.JDatabase;
+import com.ragerslazar.laloc.controller.Voiture;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
