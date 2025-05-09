@@ -26,6 +26,10 @@ public class JDatabase {
         }
     }
 
+    public Connection connection() {
+        return this.cx;
+    }
+
     public String loginDB(String email, String password) {
         String authentication = "not_authenticated";
 
