@@ -163,6 +163,7 @@ public class IHM {
         JTextField fieldGarage = new JTextField();
 
         JButton submitButton = new JButton("Ajouter");
+        JButton closeButton = new JButton("Fermer");
         submitButton.addActionListener(_ -> {
             String marque = fieldMarque.getText();
             String img = fieldImg.getText();
@@ -185,6 +186,11 @@ public class IHM {
                     JOptionPane.showMessageDialog(frame, "Erreur lors de l'insertion.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
+        });
+
+        closeButton.addActionListener(_ -> {
+            frame.dispose();
+            panel();
         });
 
         String[] columnNames = {"ID", "Nom", "Adresse"};
@@ -223,6 +229,7 @@ public class IHM {
         frame.add(fieldGarage);
 
         frame.add(submitButton);
+        frame.add(closeButton);
         frame.add(grg);
         frame.add(scrollPane);
         frame.setVisible(true);
