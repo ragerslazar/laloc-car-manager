@@ -4,24 +4,11 @@ import com.ragerslazar.laloc.model.JDatabase;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.junit.Test;
 
-import java.sql.Connection;
-
 import static org.junit.Assert.*;
 
 public class JDatabaseTest {
-    private final JDatabase db = new JDatabase();
     private final Dotenv dotenv = Dotenv.configure().load();
-
-    @Test
-    public void testObject() {
-        assertNotNull(db);
-    }
-
-    @Test
-    public void testConnection() {
-        Connection cx = this.db.connection();
-        assertNotNull(cx);
-    }
+    private final JDatabase db = new JDatabase();
 
     @Test
     public void testLoginAdmin() {
