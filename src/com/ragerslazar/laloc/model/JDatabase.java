@@ -132,6 +132,8 @@ public class JDatabase {
             }
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println(e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur de connexion ou d'exécution de la requête.");
