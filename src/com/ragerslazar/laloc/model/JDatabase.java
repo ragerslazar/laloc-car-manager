@@ -20,7 +20,7 @@ public class JDatabase {
         } catch (ClassNotFoundException ex) {
             System.out.println("Driver non trouvé");
         } catch (InstantiationException | SQLException e) {
-            System.out.println("E-mail ou mot de passe incorrect");
+            System.out.println("Database error: " + e.getMessage());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -53,7 +53,7 @@ public class JDatabase {
                         }
                     }
                 } catch (SQLException e) {
-                    System.out.println("SQLException");
+                    System.out.println("Erreur lors du login: " + e.getMessage());
                     throw new RuntimeException(e);
                 } catch (NullPointerException e) {
                     System.out.println("Serveur off");
@@ -129,8 +129,7 @@ public class JDatabase {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur de connexion ou d'exécution de la requête.");
+            System.out.println("Erreur lors de la requête: " + e.getMessage());
         }
 
         return insertSuccess;
@@ -149,7 +148,7 @@ public class JDatabase {
                 deleted = true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de la suppression: " + e.getMessage());
         }
         return deleted;
     }
@@ -183,8 +182,7 @@ public class JDatabase {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur de connexion ou d'exécution de la requête.");
+            System.out.println("Erreur lors de la mise à jour des données: " + e.getMessage());
         }
 
         return updateSuccess;
@@ -209,8 +207,7 @@ public class JDatabase {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur de connexion ou d'exécution de la requête.");
+            System.out.println("Erreur lors de la récupération des garages: " + e.getMessage());
         }
         Object[][] data = new Object[result.size()][3];
         result.toArray(data);
@@ -231,7 +228,7 @@ public class JDatabase {
                 exist = true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération des filtres: " + e.getMessage());
         }
         return exist;
     }
@@ -256,8 +253,7 @@ public class JDatabase {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Erreur de connexion ou d'exécution de la requête.");
+            System.out.println("Erreur lors de l'ajout des filtres: " + e.getMessage());
         }
 
         return insertSuccess;
@@ -276,7 +272,7 @@ public class JDatabase {
                 hashedPwd = rs.getString("password");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération du hash: " + e.getMessage());
         }
         return hashedPwd;
     }
