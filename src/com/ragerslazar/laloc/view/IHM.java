@@ -178,6 +178,10 @@ public class IHM {
             if (marque.isEmpty() || img.isEmpty() || modele.isEmpty() || immatriculation.isEmpty() || chevaux.isEmpty() || km.isEmpty() || dispo.isEmpty() || prix.isEmpty() || idGarage.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Des données sont manquantes", "Erreur", JOptionPane.ERROR_MESSAGE);
             } else {
+                boolean filer = this.voiture.checkFilter(marque);
+                if (!filer) {
+                    this.voiture.addFilter(marque);
+                }
                 boolean insertDB = this.voiture.insertDB(marque, img, modele, immatriculation, chevaux, km, dispo, prix, idGarage);
                 if (insertDB) {
                     frame.dispose();

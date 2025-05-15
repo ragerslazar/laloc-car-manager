@@ -218,6 +218,51 @@ public class JDatabase {
         return data;
     }
 
+    public boolean checkFiler(String filter) {
+        boolean exist = false;
+
+        String req = "SELECT id_sousfiltre FROM sousfiltre WHERE nom = ? AND id_filtre = 1";
+        try {
+            PreparedStatement pstmt = this.cx.prepareStatement(req);
+            pstmt.setString(1, filter);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                exist = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exist;
+    }
+
+    public boolean addFilter(String filter) {
+        boolean insertSuccess = false;
+        String req = "INSERT INTO `sousfiltre`(`id_sousfiltre`, `nom`, `id_filtre`) VALUES (NULL, ?, 1)";
+
+        try {
+            PreparedStatement stmt = this.cx.prepareStatement(req);
+
+            stmt.setString(1, filter);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                insertSuccess = true;
+                System.out.println("Filtre ajouté avec succès.");
+            } else {
+                System.out.println("Échec de l'ajout du filtre.");
+            }
+        } catch (SQLSyntaxErrorException e) {
+            System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur de connexion ou d'exécution de la requête.");
+        }
+
+        return insertSuccess;
+    }
+
     private String getHashedPwd(String email) {
         String hashedPwd = null;
 
