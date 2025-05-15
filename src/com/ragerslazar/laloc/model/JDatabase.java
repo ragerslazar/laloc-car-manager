@@ -20,7 +20,7 @@ public class JDatabase {
         } catch (ClassNotFoundException ex) {
             System.out.println("Driver non trouvé");
         } catch (InstantiationException | SQLException e) {
-            System.out.println("E-mail ou mot de passe incorrect");
+            System.out.println(e.getMessage());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -57,8 +57,7 @@ public class JDatabase {
                         }
                     }
                 } catch (SQLException e) {
-                    System.out.println("SQLException");
-                    throw new RuntimeException(e);
+                    System.out.println(e.getMessage());
                 } catch (NullPointerException e) {
                     System.out.println("Serveur off");
                 }
@@ -132,10 +131,10 @@ public class JDatabase {
             }
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
-        } catch (SQLIntegrityConstraintViolationException e) {
+        } catch (SQLIntegrityConstraintViolationException | NullPointerException e) {
             System.out.println(e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             System.out.println("Erreur de connexion ou d'exécution de la requête.");
         }
 
@@ -155,7 +154,7 @@ public class JDatabase {
                 deleted = true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return deleted;
     }
@@ -189,7 +188,7 @@ public class JDatabase {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             System.out.println("Erreur de connexion ou d'exécution de la requête.");
         }
 
@@ -215,7 +214,7 @@ public class JDatabase {
         } catch (SQLSyntaxErrorException e) {
             System.out.println("Erreur de syntaxe SQL : " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             System.out.println("Erreur de connexion ou d'exécution de la requête.");
         }
         Object[][] data = new Object[result.size()][3];
@@ -236,8 +235,8 @@ public class JDatabase {
             if (rs.next()) {
                 hashedPwd = rs.getString("password");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException | NullPointerException e) {
+            System.out.println(e.getMessage());
         }
         return hashedPwd;
     }
