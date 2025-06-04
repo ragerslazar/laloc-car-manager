@@ -87,7 +87,9 @@ public class JDatabase {
                 byte dispo = rs.getByte("dispo");
                 int prix = rs.getInt("prix");
                 int id_garage = rs.getInt("id_garage");
-                Object[] voiture = {id, marque, img, modele, immatriculation, cf, km, dispo, prix, id_garage, "❌", "✏️"};
+                String debut_loc = rs.getString("debut_loc");
+                String fin_loc = rs.getString("fin_loc");
+                Object[] voiture = {id, marque, img, modele, immatriculation, cf, km, dispo, prix, id_garage, debut_loc, fin_loc, "❌", "✏️"};
                 voituresList.add(voiture);
             }
         } catch (SQLException e) {
@@ -101,9 +103,9 @@ public class JDatabase {
     }
 
 
-    public boolean queryInsert(String marque, String img, String modele, String immatriculation, String chevaux, String km, String dispo, String prix, String idGarage) {
+    public boolean queryInsert(String marque, String img, String modele, String immatriculation, String chevaux, String km, String dispo, String prix, String idGarage, String debut_loc, String fin_loc) {
         boolean insertSuccess = false;
-        String req = "INSERT INTO vehicule (id_vehicule, marque, img, modele, immatriculation, chevaux_fiscaux, km, dispo, prix, id_garage) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO vehicule (id_vehicule, marque, img, modele, immatriculation, chevaux_fiscaux, km, dispo, prix, id_garage, debut_loc, fin_loc) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = this.cx.prepareStatement(req);
@@ -117,6 +119,8 @@ public class JDatabase {
             stmt.setString(7, dispo);
             stmt.setString(8, prix);
             stmt.setString(9, idGarage);
+            stmt.setString(10, debut_loc);
+            stmt.setString(11, fin_loc);
 
             int rowsAffected = stmt.executeUpdate();
 
@@ -153,9 +157,9 @@ public class JDatabase {
         return deleted;
     }
 
-    public boolean queryUpdate(String idVehicule, String marque, String img, String modele, String immatriculation, String chevaux, String km, String dispo, String prix, String idGarage) {
+    public boolean queryUpdate(String idVehicule, String marque, String img, String modele, String immatriculation, String chevaux, String km, String dispo, String prix, String idGarage, String debut_loc, String fin_loc) {
         boolean updateSuccess = false;
-        String req = "UPDATE vehicule SET marque = ?, img = ?, modele = ?, immatriculation = ?, chevaux_fiscaux = ?, km = ?, dispo = ?, prix = ?, id_garage = ? WHERE id_vehicule = ?;";
+        String req = "UPDATE vehicule SET marque = ?, img = ?, modele = ?, immatriculation = ?, chevaux_fiscaux = ?, km = ?, dispo = ?, prix = ?, id_garage = ?, debut_loc = ?, fin_loc = ? WHERE id_vehicule = ?;";
 
         try {
             PreparedStatement stmt = this.cx.prepareStatement(req);
@@ -169,7 +173,11 @@ public class JDatabase {
             stmt.setString(7, dispo);
             stmt.setString(8, prix);
             stmt.setString(9, idGarage);
-            stmt.setString(10, idVehicule);
+            stmt.setString(10, debut_loc);
+            stmt.setString(11, fin_loc);
+            stmt.setString(12, idVehicule);
+            System.out.println(stmt);
+
 
             int rowsAffected = stmt.executeUpdate();
 

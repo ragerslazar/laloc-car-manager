@@ -83,7 +83,7 @@ public class IHM {
 
         newFrame.add(topPanel, BorderLayout.NORTH);
 
-        String[] columnNames = {"ID", "Marque", "Image", "Modèle", "Immatriculation", "Chevaux fiscaux", "Km", "Dispo", "Prix", "ID Garage", "Supprimer", "Modifier"};
+        String[] columnNames = {"ID", "Marque", "Image", "Modèle", "Immatriculation", "Chevaux fiscaux", "Km", "Dispo", "Prix", "ID Garage", "Debut Location", "Fin Location", "Supprimer", "Modifier"};
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         JTable table = new JTable(model);
@@ -95,7 +95,7 @@ public class IHM {
                 int row = table.rowAtPoint(e.getPoint());
                 int col = table.columnAtPoint(e.getPoint());
 
-                if (row >= 0 && col == 10) {
+                if (row >= 0 && col == 12) {
                     newFrame.dispose();
                     int confirm = JOptionPane.showConfirmDialog(scrollPane,
                             "Voulez-vous vraiment supprimer ce véhicule ?",
@@ -113,7 +113,7 @@ public class IHM {
                         }
                     }
                     panel();
-                } else if (row >= 0 && col == 11) {
+                } else if (row >= 0 && col == 13) {
                     newFrame.dispose();
                     updatePanel(table, row);
                 }
@@ -126,9 +126,8 @@ public class IHM {
     }
 
     private void createPanel() {
-
         JFrame frame = new JFrame("Ajouter un véhicule");
-        frame.setSize(400, 500);
+        frame.setSize(400, 650); // Augmenter la hauteur pour les nouveaux champs
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
@@ -162,8 +161,16 @@ public class IHM {
         JLabel labelGarage = new JLabel("ID Garage:");
         JTextField fieldGarage = new JTextField();
 
+        // Ajout des nouveaux champs pour début et fin de location
+        JLabel labelDebutLocation = new JLabel("Début de location:");
+        JTextField fieldDebutLocation = new JTextField();
+
+        JLabel labelFinLocation = new JLabel("Fin de location:");
+        JTextField fieldFinLocation = new JTextField();
+
         JButton submitButton = new JButton("Ajouter");
         JButton closeButton = new JButton("Fermer");
+
         submitButton.addActionListener(_ -> {
             String marque = fieldMarque.getText();
             String img = fieldImg.getText();
@@ -174,15 +181,17 @@ public class IHM {
             String dispo = fieldDispo.getText();
             String prix = fieldPrix.getText();
             String idGarage = fieldGarage.getText();
+            String debutLocation = fieldDebutLocation.getText();
+            String finLocation = fieldFinLocation.getText();
 
-            if (marque.isEmpty() || img.isEmpty() || modele.isEmpty() || immatriculation.isEmpty() || chevaux.isEmpty() || km.isEmpty() || dispo.isEmpty() || prix.isEmpty() || idGarage.isEmpty()) {
+            if (marque.isEmpty() || img.isEmpty() || modele.isEmpty() || immatriculation.isEmpty() || chevaux.isEmpty() || km.isEmpty() || dispo.isEmpty() || prix.isEmpty() || idGarage.isEmpty() || debutLocation.isEmpty() || finLocation.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Des données sont manquantes", "Erreur", JOptionPane.ERROR_MESSAGE);
             } else {
                 boolean filer = this.voiture.checkFilter(marque);
                 if (!filer) {
                     this.voiture.addFilter(marque);
                 }
-                boolean insertDB = this.voiture.insertDB(marque, img, modele, immatriculation, chevaux, km, dispo, prix, idGarage);
+                boolean insertDB = this.voiture.insertDB(marque, img, modele, immatriculation, chevaux, km, dispo, prix, idGarage, debutLocation, finLocation);
                 if (insertDB) {
                     frame.dispose();
                     panel();
@@ -198,7 +207,6 @@ public class IHM {
         });
 
         String[] columnNames = {"ID", "Nom", "Adresse"};
-
         Object[][] data = this.garage.getGarage();
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
@@ -232,10 +240,18 @@ public class IHM {
         frame.add(labelGarage);
         frame.add(fieldGarage);
 
+        // Ajout des champs de date
+        frame.add(labelDebutLocation);
+        frame.add(fieldDebutLocation);
+
+        frame.add(labelFinLocation);
+        frame.add(fieldFinLocation);
+
         frame.add(submitButton);
         frame.add(closeButton);
         frame.add(grg);
         frame.add(scrollPane);
+
         frame.setVisible(true);
     }
 
@@ -243,11 +259,11 @@ public class IHM {
         String idVehicule = table.getValueAt(row, 0).toString();
 
         JFrame modifFrame = new JFrame("Modifier véhicule");
-        modifFrame.setSize(400, 600);
+        modifFrame.setSize(400, 650); // Augmenter la hauteur pour les nouveaux champs
         modifFrame.setLocationRelativeTo(null);
         modifFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        modifFrame.setLayout(new GridLayout(20, 1, 5, 5));
+        modifFrame.setLayout(new GridLayout(22, 1, 5, 5));
 
         JLabel marqueLabel = new JLabel("Marque :");
         JLabel imageLabel = new JLabel("Image :");
@@ -258,6 +274,8 @@ public class IHM {
         JLabel dispoLabel = new JLabel("Disponible (true/false) :");
         JLabel prixLabel = new JLabel("Prix :");
         JLabel idGarageLabel = new JLabel("ID Garage :");
+        JLabel debutLocationLabel = new JLabel("Début de location :");
+        JLabel finLocationLabel = new JLabel("Fin de location :");
 
         JTextField marqueField = new JTextField(table.getValueAt(row, 1).toString());
         JTextField imageField = new JTextField(table.getValueAt(row, 2).toString());
@@ -268,6 +286,10 @@ public class IHM {
         JTextField dispoField = new JTextField(table.getValueAt(row, 7).toString());
         JTextField prixField = new JTextField(table.getValueAt(row, 8).toString());
         JTextField idGarageField = new JTextField(table.getValueAt(row, 9).toString());
+
+
+        JTextField debutLocationField = new JTextField(table.getValueAt(row, 10).toString());
+        JTextField finLocationField = new JTextField(table.getValueAt(row, 11).toString());
 
         modifFrame.add(marqueLabel);
         modifFrame.add(marqueField);
@@ -288,8 +310,15 @@ public class IHM {
         modifFrame.add(idGarageLabel);
         modifFrame.add(idGarageField);
 
+        // Ajout des champs de date
+        modifFrame.add(debutLocationLabel);
+        modifFrame.add(debutLocationField);
+        modifFrame.add(finLocationLabel);
+        modifFrame.add(finLocationField);
+
         JButton saveButton = new JButton("Enregistrer");
         JButton closeButton = new JButton("Fermer");
+
         saveButton.addActionListener(_ -> {
             String marque = marqueField.getText();
             String image = imageField.getText();
@@ -300,8 +329,10 @@ public class IHM {
             String disponibilite = dispoField.getText();
             String prix = prixField.getText();
             String idGarage = idGarageField.getText();
+            String debutLocation = debutLocationField.getText();
+            String finLocation = finLocationField.getText();
 
-            boolean update = this.voiture.updateDB(idVehicule, marque, image, modele, immatriculation, chevaux, kilometrage, disponibilite, prix, idGarage);
+            boolean update = this.voiture.updateDB(idVehicule, marque, image, modele, immatriculation, chevaux, kilometrage, disponibilite, prix, idGarage, debutLocation, finLocation);
             if (update) {
                 JOptionPane.showMessageDialog(modifFrame, "Véhicule modifié avec succès !", "Info", JOptionPane.INFORMATION_MESSAGE);
             } else {
