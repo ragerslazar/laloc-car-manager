@@ -1,7 +1,7 @@
 package com.ragerslazar.laloc.view;
 
 import com.ragerslazar.laloc.controller.Garage;
-import com.ragerslazar.laloc.model.JDatabase;
+import com.ragerslazar.laloc.controller.User;
 import com.ragerslazar.laloc.controller.Voiture;
 
 import javax.swing.*;
@@ -13,14 +13,14 @@ import java.awt.event.MouseEvent;
 
 public class IHM {
 
-    private JDatabase db;
     private Voiture voiture;
     private Garage garage;
+    private User user;
 
     public IHM() {
-        this.db = new JDatabase();
-        this.voiture = new Voiture(db);
-        this.garage = new Garage(db);
+        this.voiture = new Voiture();
+        this.garage = new Garage();
+        this.user = new User();
     }
     public void login() {
         JFrame frame = new JFrame("Connexion");
@@ -48,7 +48,7 @@ public class IHM {
         loginButton.addActionListener(e -> {
             String username = userField.getText();
             String password = new String(passField.getPassword());
-            String login_req = db.loginDB(username, password);
+            String login_req = this.user.loginController(username, password);
 
             if (login_req.equals("approved")) {
                 JOptionPane.showMessageDialog(frame, "Connexion réussie !");
@@ -103,7 +103,7 @@ public class IHM {
                             JOptionPane.YES_NO_OPTION);
 
                     if (confirm == JOptionPane.YES_OPTION) {
-                        int idVehicule = (int) table.getValueAt(row, 0); // Récupérer l'ID du véhicule
+                        int idVehicule = (int) table.getValueAt(row, 0);
                         boolean deleteCar = voiture.deleteDB(idVehicule);
                         if (deleteCar) {
                             ((DefaultTableModel) table.getModel()).removeRow(row);
@@ -127,7 +127,7 @@ public class IHM {
 
     private void createPanel() {
         JFrame frame = new JFrame("Ajouter un véhicule");
-        frame.setSize(400, 650); // Augmenter la hauteur pour les nouveaux champs
+        frame.setSize(400, 650);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
@@ -161,7 +161,6 @@ public class IHM {
         JLabel labelGarage = new JLabel("ID Garage:");
         JTextField fieldGarage = new JTextField();
 
-        // Ajout des nouveaux champs pour début et fin de location
         JLabel labelDebutLocation = new JLabel("Début de location:");
         JTextField fieldDebutLocation = new JTextField();
 
@@ -240,7 +239,6 @@ public class IHM {
         frame.add(labelGarage);
         frame.add(fieldGarage);
 
-        // Ajout des champs de date
         frame.add(labelDebutLocation);
         frame.add(fieldDebutLocation);
 
@@ -259,7 +257,7 @@ public class IHM {
         String idVehicule = table.getValueAt(row, 0).toString();
 
         JFrame modifFrame = new JFrame("Modifier véhicule");
-        modifFrame.setSize(400, 650); // Augmenter la hauteur pour les nouveaux champs
+        modifFrame.setSize(400, 650);
         modifFrame.setLocationRelativeTo(null);
         modifFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -310,7 +308,6 @@ public class IHM {
         modifFrame.add(idGarageLabel);
         modifFrame.add(idGarageField);
 
-        // Ajout des champs de date
         modifFrame.add(debutLocationLabel);
         modifFrame.add(debutLocationField);
         modifFrame.add(finLocationLabel);

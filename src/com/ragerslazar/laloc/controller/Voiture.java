@@ -7,8 +7,8 @@ import java.util.Date;
 public class Voiture {
     private JDatabase db;
 
-    public Voiture(JDatabase db) {
-        this.db = db;
+    public Voiture() {
+        this.db = new JDatabase();
     }
 
     public Object[][] getVoitures() {

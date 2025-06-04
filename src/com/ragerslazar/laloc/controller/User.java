@@ -2,14 +2,14 @@ package com.ragerslazar.laloc.controller;
 
 import com.ragerslazar.laloc.model.JDatabase;
 
-public class Garage {
+public class User {
     private JDatabase db;
 
-    public Garage() {
+    public User() {
         this.db = new JDatabase();
     }
 
-    public Object[][] getGarage() {
-        return this.db.queryGarage();
+    public String loginController(String email, String password) {
+        return this.db.loginDB(email, password);
     }
 }
