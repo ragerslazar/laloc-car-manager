@@ -2,8 +2,6 @@ package com.ragerslazar.laloc.controller;
 
 import com.ragerslazar.laloc.model.JDatabase;
 
-import java.util.Date;
-
 public class Voiture {
     private JDatabase db;
 

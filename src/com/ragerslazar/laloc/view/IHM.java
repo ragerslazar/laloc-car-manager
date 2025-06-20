@@ -39,7 +39,7 @@ public class IHM {
         panel.add(userField);
         panel.add(passLabel);
         panel.add(passField);
-        panel.add(new JLabel()); // Pour pousser le bouton a droite
+        panel.add(new JLabel());
         panel.add(loginButton);
 
         frame.add(panel);
@@ -65,7 +65,7 @@ public class IHM {
     private void panel() {
         Object[][] data = this.voiture.getVoitures();
 
-        JFrame newFrame = new JFrame("Interface Utilisateur");
+        JFrame newFrame = new JFrame("Interface Administrateur");
         newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         newFrame.setSize(1100, 400);
         newFrame.setLocationRelativeTo(null);
