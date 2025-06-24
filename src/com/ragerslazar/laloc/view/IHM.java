@@ -192,6 +192,7 @@ public class IHM {
                 }
                 boolean insertDB = this.voiture.insertDB(marque, img, modele, immatriculation, chevaux, km, dispo, prix, idGarage, debutLocation, finLocation);
                 if (insertDB) {
+                    JOptionPane.showMessageDialog(frame,"Véhicule ajouté avec succès !", "Info", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose();
                     panel();
                 } else {
